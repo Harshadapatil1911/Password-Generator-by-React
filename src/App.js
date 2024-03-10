@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-// import {toast , ToastContainer} from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css';
+import {toast , ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import{numbers , UpperCaseLetters ,LowerCaseLetters , specialCharacters } from './character.js';
 import {COPY_SUCCESS} from './message.js';
 function App() {
@@ -13,6 +13,10 @@ function App() {
   const [IncludeSymbols, setIncludeSymbols] = useState(false)
 
   const handleGeneratePassword = (e) =>{
+    if(!IncludeLowerCase && !IncludeNumbers && !IncludeSymbols && !IncludeUpperCase)
+    {
+      notify('You must have to select atleast one option',true)
+    }
     let characterlist = '';
 
     if(IncludeLowerCase){
@@ -51,8 +55,43 @@ function App() {
    newTextArea.remove()
    }
    const handleCopyPassword = (e) =>{
-    copyToClipboard()
+    if(password === ''){
+      notify('Nothing to copy',true)
+    }
+    else{
+      copyToClipboard()
+    notify(COPY_SUCCESS)
+    }
+    
    }
+   const notify = (message, hasError = false)=>{
+    if(hasError){
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+       
+        });
+
+    }
+    else{
+    toast.success(COPY_SUCCESS, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      });
+   }
+  }
 
   return (
     <div className="App">
@@ -120,9 +159,21 @@ function App() {
             <label htmlFor='Include_Symbols' className='space'>Include Symbols </label>
             
           </div>
-          <button onClick={handleGeneratePassword} className='btn-hover color-10 generator_btn '>Generate Password</button>
-          
-        
+          <button onClick={handleGeneratePassword} className='btn-hover color-10 generator_btn '>
+            Generate Password
+            </button>
+            <ToastContainer
+           position="top-center"
+           autoClose={5000}
+           hideProgressBar={false}
+           newestOnTop={false}
+           closeOnClick
+           rtl={false}
+           pauseOnFocusLoss
+           draggable
+           pauseOnHover
+           theme="colored"
+            />
       </div>
     </div>
     </div>
